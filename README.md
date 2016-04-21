@@ -1,2 +1,2 @@
 # django-rest-framework
-What is built from using a django rest framework tutorial
+An API built using the Django Rest Framework.
