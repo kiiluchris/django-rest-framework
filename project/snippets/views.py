@@ -1,5 +1,9 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from snippets.models import Snippet
@@ -14,7 +18,7 @@ class JSONResponse(HttpResponse):
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
         
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def snippet_list(request):
     """
     List all code snippets, or create new snippet.
@@ -25,13 +29,12 @@ def snippet_list(request):
         return JSONResponse(serializer.data)
         
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = SnippetSerializer(data=data)
+        serializer = SnippetSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data, status=201)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
             
-        return JSONResponse(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 @csrf_exempt
 def snippet_detail(request, pk):
