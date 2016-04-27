@@ -9,6 +9,15 @@ from snippets.serializers import SnippetSerializer
 
 class SnippetList(APIView):
     """
+    List all snippets, or create a new one.
+    """
+    def get(self, request, format=None):
+        snippets = Snippet.objects.all()
+        serializer = SnippetSerializer(snippets, many=True)
+        return Response(serializer.data)
+
+class SnippetDetail(APIView):
+    """
     Retrieve, update or delete snippet instance.
     """
     def get_object(self, pk):
