@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-class IsOwnerReadOnly(permissions.BasePermission):
+class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow users of an object to edit it.
     """
